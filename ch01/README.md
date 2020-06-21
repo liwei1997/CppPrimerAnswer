@@ -212,7 +212,7 @@ int main()
 ## 1.5.1 节练习
 ### 练习 1.20
 >在网站[http://www.informit.com/title/0312714113](http://www.informit.com/title/0312714113)上，第1章的代码目录中包含了头文件Sales_item.h。将它拷贝刀你自己的工作目录中。用它编写一个程序，读取一组书记的销售记录，将每条记录打印到标准输出上。
-```
+```c++
 #include <iostream>
 #include "Sales_item"
 
