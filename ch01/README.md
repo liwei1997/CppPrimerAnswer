@@ -46,6 +46,7 @@ int main()
     std::cout << " is ";
     std::cout << v1+v2;
     std::cout << std::endl;
+    return 0;
 }
 ```
 ### 练习 1.6
@@ -213,12 +214,25 @@ int main()
 >在网站[http://www.informit.com/title/0312714113](http://www.informit.com/title/0312714113)上，第1章的代码目录中包含了头文件Sales_item.h。将它拷贝刀你自己的工作目录中。用它编写一个程序，读取一组书记的销售记录，将每条记录打印到标准输出上。
 ```c++
 #include <iostream>
-#include "Sales_item"
+#include "Sales_item.h"
 
 int main()
 {
     for (Sales_item books; std::cin >> books; std::cout << books << std::endl);
     return 0;
+}
+```
+### 练习 1.21
+>编写程序，读取两个ISBN相同的Sales_item对象，输出它们的和。
+```c++
+include <iostream>
+include "Sales_item.h"
+
+int main()
+{
+    Sales_item item1, item2;
+    std
+    if(item1.isbn()==item2.isbn)
 }
 ```
 
