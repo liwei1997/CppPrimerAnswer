@@ -294,4 +294,460 @@ int main()
 int null = 0, *p = null;
 ```
 
-<++>
+## 2.5 处理类型
+### 2.5.1 类型别名
+### 2.5.2 auto 类型说明符
+#### 练习 2.33
+>利用本节定义的变量，判断下列语句的运行结果。
+>
+>```c++
+>a = 42;
+>b = 42;
+>c = 42;
+>d = 42;
+>e = 42;
+>g = 42;
+>```
+
+#### 练习 2.34
+>基于上一个练习中的变量和语句编写一段程序，输出赋值前后变量的内容，你刚才的推断正确吗？如果不正确，请反复研读本节的示例直到你明白错在何处为止。
+
+```c++
+#include <iostream>
+
+int main()
+{
+    int i = 0, &r = i;
+    const int ci = i, &cr = ci;
+    auto a = r;  // a: int
+    auto b = ci;  // b: int
+    auto c = cr;  // c: int
+    auto d = &i;  // d: int *
+    auto e = &ci;  // e: const int *
+    auto &g = ci;  // g: int &;
+    std::cout
+        << a << "\n" 
+        << b << "\n"
+        << c << "\n"
+        << d << "\n"
+        << e << "\n"
+        << g << "\n" 
+        << std::endl;
+    a = 42;
+    b = 42; 
+    c = 42;
+    //d = 42; e = 42; g = 42;
+    std::cout
+        << a << "\n" 
+        << b << "\n"
+        << c << "\n"
+        << d << "\n"
+        << e << "\n"
+        << g << "\n" 
+        << std::endl;
+    return 0;
+}
+```
+
+#### 练习 2.35
+>请判断下列定义推断出的类型是什么，然后编写程序进行验证。
+>
+>```c++
+>const int i = 42;
+>auto j = i;
+>const auto &k = i;
+>auto *p = &i;
+>const auto j2 = i, &k2 = i;
+>```
+
+```c++
+#include <iostream>
+int main()
+{
+    const int i = 42;
+    auto j = i;  // j: int
+    const auto &k = i;  // k: const int &
+    auto *p = &i;  // p: const int *
+    const auto j2 = i, &k2 = i;  // j2: const int, k2: const int &
+    j = 24;  // true
+    // k = 42;  // false
+    const int j1 = 42;
+    p = &j1;  // true
+    // int &r = j2;  // false
+    // k2 = 25;  // false
+    return 0;
+}
+```
+### 2.5.3 decltype 类型指示符
+#### 练习 2.36
+>关于下面的代码，请指出每一个变量的类型以及程序结束时它们各自的值。
+>
+```c++
+int a = 3, b = 4;
+decltype(a) c = a;
+decltype ((b)) = a;
+++c;
+++d;
+```
+#### 练习 2.37
+>赋值是会产生引用的一类典型表达式，引用的类型就是左值的类型。也就是说，如果i是int，则表达式i=x的类型是int&。根据这一特点，请指出下面的代码中每一个变量的类型和值。
+
+```c++
+int a = 3, b = 4;
+decltype(a) c = a;
+decltype(a = b) d = a;
+```
+#### 练习 2.38
+>说明由decltype指定类型和由auto指定类型有何区别。请举出一个例子，decltype指定的类型与auto指定的类型一样；再举一个例子，decltype指定的类型与auto指定的类型不一样。
+
+```c++
+#include <iostream>
+int main()
+{
+    int i = 10, &j = i;
+    // same
+    auto a = i;
+    decltype(i) a1;
+    // different 
+    auto b = j;  //b: int
+    decltype(j) b1 = i;  //b1: int &
+    return 0;
+}
+```
+## 2.6 自定义数据结构
+### 2.6.1 定义Sales_data类型
+#### 练习 2.39
+>编译下面的程序观察其运行结果，注意，如果忘记写类定义体后边的分号会发生什么情况？记录下相关信息，以后可能会有用。
+>
+>```c++
+>struct Foo { /* 此处为空 */ } // 注意：没有分号
+>int main()
+>{
+>    return 0;
+>}
+>```
+
+#### 练习 2.40
+>根据自己的理解写出Sales_data类，最好与书中的例子有所区别。
+
+```c++
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+```
+#### 练习 2.41
+>使用你自己的Sales_data类重写1.51节、1.52节、1.6节的练习。眼下先把Sales_data类的定义和`main`函数放在同一个文件里。
+
+```c++
+/* 练习1.20*/
+#include <iostream>
+#include <string>
+
+struct Sales_data {
+    std::string isbn;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+int main()
+{
+    Sales_data book;
+    while (std::cin >> book.ISBN >> book.numbers >> book.price) {
+        book.total = book.numbers * book.price;
+        std::cout << book.ISBN << " " << book.numbers << " " << book.price << " " << book.total << std::endl;
+    }
+    return 0;
+}
+```
+```c++
+
+/* 练习1.21*/
+#include <iostream>
+#include <string>
+
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+int main()
+{
+    Sales_data book, book2;
+    std::cin >> book.ISBN >> book.numbers >> book.price;
+    book.total = book.numbers * book.price;
+    std::cin >> book2.ISBN >> book2.numbers >> book2.price;
+    book2.total = book2.numbers * book2.price;
+    if (book.ISBN == book2.ISBN) {
+        book.numbers += book2.numbers;
+        book.total += book2.total;
+        std::cout << book.ISBN << " " << book.numbers << " " << book.total << std::endl;
+        return 0;
+    } else {
+        std::cerr << "Data must refer to the same ISBN." << std::endl;
+        return -1;
+    }
+}
+```
+```c++
+
+/* 练习1.22*/
+#include <iostream>
+#include <string>
+
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+    return 0;
+}
+```
+```c++
+/* 练习1.23*/
+#include <iostream>
+#include <string>
+
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        int count = 1;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+                ++count;
+            } else {
+                std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+                std::cout << count << std::endl;
+                count = 1;
+                books = books2;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+        std::cout << count << std::endl;
+        return 0;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+}
+```
+```c++
+
+/* 练习1.25*/
+#include <iostream>
+#include <string>
+
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+            } else {
+                std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+                books = books2;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+        return 0;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+}
+```
+### 2.6.3 编写自己的头文件
+### 练习 2.42
+>根据你自己的理解重写一个Sales_data.h头文件，并以此为基础重做2.6.2节的练习。
+
+```c++
+/* Sales_data.h */
+#ifndef SALES_DATA_H
+#define SALES_DATA_H
+#include <string>
+
+struct Sales_data {
+    std::string ISBN;
+    unsigned numbers = 0;
+    double price = 0.0;
+    double total = 0.0;
+};
+
+#endif
+```
+```c++
+#include <iostream>
+#include "Sales_data.h"
+
+int main()
+{
+    Sales_data book;
+    while (std::cin >> book.ISBN >> book.numbers >> book.price) {
+        book.total = book.numbers * book.price;
+        std::cout << book.ISBN << " " << book.numbers << " " << book.price << " " << book.total << std::endl;
+    }
+    return 0;
+}
+
+```
+```c++
+#include <iostream>
+#include "Sales_data.h"
+
+int main()
+{
+    Sales_data book, book2;
+    std::cin >> book.ISBN >> book.numbers >> book.price;
+    book.total = book.numbers * book.price;
+    std::cin >> book2.ISBN >> book2.numbers >> book2.price;
+    book2.total = book2.numbers * book2.price;
+    if (book.ISBN == book2.ISBN) {
+        book.numbers += book2.numbers;
+        book.total += book2.total;
+        std::cout << book.ISBN << " " << book.numbers << " " << book.total << std::endl;
+        return 0;
+    } else {
+        std::cerr << "Data must refer to the same ISBN." << std::endl;
+        return -1;
+    }
+}
+
+```
+```c++
+#include <iostream>
+#include "Sales_data.h"
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+    return 0;
+}
+
+```
+```c++
+#include <iostream>
+#include "Sales_data.h"
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        int count = 1;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+                ++count;
+            } else {
+                std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+                std::cout << count << std::endl;
+                count = 1;
+                books = books2;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+        std::cout << count << std::endl;
+        return 0;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+}
+
+```
+```c++
+#include <iostream>
+#include "Sales_data.h"
+
+int main()
+{
+    Sales_data books;
+    if (std::cin >> books.ISBN >> books.numbers >> books.price) {
+        books.total = books.numbers * books.price;
+        Sales_data books2;
+        while (std::cin >> books2.ISBN >> books2.numbers >> books2.price) {
+            books2.total = books2.numbers * books2.price;
+            if (books.ISBN == books2.ISBN) {
+                books.numbers += books2.numbers;
+                books.total += books2.total;
+            } else {
+                std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+                books = books2;
+            }
+        }
+        std::cout << books.ISBN << " " << books.numbers << " " << books.total << std::endl;
+        return 0;
+    } else {
+        std::cerr << "No data?!" << std::endl;
+        return -1;
+    }
+}
+```

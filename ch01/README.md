@@ -302,8 +302,8 @@ int main()
 int main()
 {
     Sales_item books;
-    int count;
     if (std::cin >> books) {
+        int count = 1;
         Sales_item trans;
         while (std::cin >> trans) {
             if (books.isbn() == trans.isbn()) {
@@ -312,9 +312,16 @@ int main()
             } else {
                 std::cout << books << std::endl;
                 std::count << count << std::endl;
+                count = 1;
                 books = trans;
             }
         }
+        std::cout << books << std::endl;
+        std::count << count << std::endl;
+        return 0;
+    } else {
+        std::cerr << "No data ?!" << std::endl;
+        return -1;
     }
 }
 ```
